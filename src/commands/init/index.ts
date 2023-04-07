@@ -1,14 +1,15 @@
-import fs from 'fs-extra'
-import { getAbsolutePath } from '../../utils/getAbsolutePath'
-import defaultConfig from '../../default.config'
-import { CONFIG_FILE_NAME } from '../../utils/constants'
-import { serializeCode } from '../../utils/serializeCode'
+import fs from "fs-extra";
+import { getAbsolutePath } from "../../utils/getAbsolutePath";
+import defaultConfig from "../../default.config";
+import { CONFIG_FILE_NAME } from "../../utils/constants";
+import { serializeCode } from "../../utils/serializeCode";
 
 function execInit() {
-  const configPath = getAbsolutePath(process.cwd(), CONFIG_FILE_NAME)
-  const code = serializeCode(defaultConfig)
+  const configPath = getAbsolutePath(process.cwd(), CONFIG_FILE_NAME);
+  const code = serializeCode(defaultConfig);
 
-  fs.outputFileSync(configPath, code)
+  fs.outputFileSync(configPath, code);
+  console.info("初始化配置成功");
 }
 
-export default execInit
+export default execInit;

@@ -1,24 +1,24 @@
-import { Config, Rule } from '../types'
+import { Config, Rule } from "../types";
 
 // 第二个参数path，在生成配置文件时需要展示在文件里，所以不需要去掉
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCustomizeKey(key: string, path?: string): string {
-  return key
+  return key;
 }
 
 function getCommonRule(): Rule {
   return {
-    caller: '',
-    functionName: 't',
+    caller: "",
+    functionName: "t",
     customizeKey: getCustomizeKey,
-    importDeclaration: 'import { t } from "i18n"',
-  }
+    importDeclaration: 'import { ts } from "@/language/translate"',
+  };
 }
 
 const config: Config = {
-  input: 'src',
-  output: '',
-  exclude: ['**/node_modules/**/*'],
+  input: "src",
+  output: "",
+  exclude: ["**/node_modules/**/*"],
   rules: {
     js: getCommonRule(),
     ts: getCommonRule(),
@@ -26,17 +26,17 @@ const config: Config = {
     mjs: getCommonRule(),
     jsx: {
       ...getCommonRule(),
-      functionSnippets: '',
+      functionSnippets: "",
     },
     tsx: {
       ...getCommonRule(),
-      functionSnippets: '',
+      functionSnippets: "",
     },
     vue: {
-      caller: 'this',
-      functionName: '$t',
+      caller: "this",
+      functionName: "$t",
       customizeKey: getCustomizeKey,
-      importDeclaration: '',
+      importDeclaration: "",
     },
   },
   prettier: {
@@ -45,19 +45,19 @@ const config: Config = {
   },
   incremental: false,
   skipExtract: false,
-  localePath: './locales/zh.json',
-  localeFileType: 'json',
-  excelPath: './locales.xlsx',
+  localePath: "./locales/zh.json",
+  localeFileType: "json",
+  excelPath: "./locales.xlsx",
   exportExcel: false,
   skipTranslate: false,
-  locales: ['en'],
+  locales: ["en"],
   globalRule: {
     ignoreMethods: [],
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   adjustKeyMap(allKeyValue, currentFileKeyMap, currentFilePath) {
-    return allKeyValue
+    return allKeyValue;
   },
-}
+};
 
-export default config
+export default config;
