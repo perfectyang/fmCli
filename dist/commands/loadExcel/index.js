@@ -49,6 +49,7 @@ const handleExcelData = ({ xlsxData, excelJsonOutPutPath, ext, incremental, }) =
         oldPrimaryLang = (0, getLang_1.default)(primaryLangPath);
         const contentPack = (0, merge_1.default)(incremental ? oldPrimaryLang : {}, localePack);
         (0, saveLocaleFile_1.saveLocaleFile)(contentPack, currentLocalePath);
+        log_1.default.success(`${currentLocalePath}---->生成成功!`);
     });
     log_1.default.success(`导入完毕!`);
 };
@@ -59,7 +60,8 @@ function execLoadExcel(options) {
     // 全局缓存脚手架配置
     stateManager_1.default.setToolConfig(i18nConfig);
     const { excelPath, excelJsonOutPutPath } = i18nConfig;
-    const xlsxData = node_xlsx_1.default.parse((0, getAbsolutePath_1.getAbsolutePath)(process.cwd(), excelPath))[0].data;
+    const xlsxData = node_xlsx_1.default.parse((0, getAbsolutePath_1.getAbsolutePath)(process.cwd(), excelPath))[0]
+        .data;
     if (xlsxData.length === 0) {
         return;
     }
@@ -76,11 +78,11 @@ const ajaxExcel = (options) => {
     const getXLS = () => {
         axios_1.default
             .request({
-            responseType: 'arraybuffer',
+            responseType: "arraybuffer",
             url: apiExcelUrl,
-            method: 'get',
+            method: "get",
             headers: {
-                'Content-Type': 'blob',
+                "Content-Type": "blob",
             },
         })
             .then((result) => {
@@ -88,7 +90,7 @@ const ajaxExcel = (options) => {
             handleExcelData({
                 xlsxData: workSheetsFromBuffer[0].data,
                 excelJsonOutPutPath,
-                ext: 'json',
+                ext: "json",
                 incremental,
             });
             log_1.default.success(`多语言替换成功`);
