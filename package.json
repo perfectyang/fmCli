@@ -1,10 +1,7 @@
 {
-  "name": "dms-cli",
-  "version": "1.0.0",
+  "name": "@fefeime/cli",
+  "version": "1.2.1",
   "description": "实现中文自动替换i18n标记命令行工具",
-  "publishConfig": {
-    "access": "public"
-  },
   "bin": {
     "fm": "bin/index.js"
   },

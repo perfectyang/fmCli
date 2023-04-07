@@ -7,28 +7,28 @@ function getCustomizeKey(key, path) {
 }
 function getCommonRule() {
     return {
-        caller: '',
-        functionName: 't',
+        caller: "",
+        functionName: "t",
         customizeKey: getCustomizeKey,
-        importDeclaration: 'import { t } from "i18n"',
+        importDeclaration: 'import { ts } from "@/language/translate"',
     };
 }
 const config = {
-    input: 'src',
-    output: '',
-    exclude: ['**/node_modules/**/*'],
+    input: "src",
+    output: "",
+    exclude: ["**/node_modules/**/*"],
     rules: {
         js: getCommonRule(),
         ts: getCommonRule(),
         cjs: getCommonRule(),
         mjs: getCommonRule(),
-        jsx: Object.assign(Object.assign({}, getCommonRule()), { functionSnippets: '' }),
-        tsx: Object.assign(Object.assign({}, getCommonRule()), { functionSnippets: '' }),
+        jsx: Object.assign(Object.assign({}, getCommonRule()), { functionSnippets: "" }),
+        tsx: Object.assign(Object.assign({}, getCommonRule()), { functionSnippets: "" }),
         vue: {
-            caller: 'this',
-            functionName: '$t',
+            caller: "this",
+            functionName: "$t",
             customizeKey: getCustomizeKey,
-            importDeclaration: '',
+            importDeclaration: "",
         },
     },
     prettier: {
@@ -37,12 +37,12 @@ const config = {
     },
     incremental: false,
     skipExtract: false,
-    localePath: './locales/zh.json',
-    localeFileType: 'json',
-    excelPath: './locales.xlsx',
+    localePath: "./locales/zh.json",
+    localeFileType: "json",
+    excelPath: "./locales.xlsx",
     exportExcel: false,
     skipTranslate: false,
-    locales: ['en'],
+    locales: ["en"],
     globalRule: {
         ignoreMethods: [],
     },

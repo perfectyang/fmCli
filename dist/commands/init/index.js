@@ -12,5 +12,6 @@ function execInit() {
     const configPath = (0, getAbsolutePath_1.getAbsolutePath)(process.cwd(), constants_1.CONFIG_FILE_NAME);
     const code = (0, serializeCode_1.serializeCode)(default_config_1.default);
     fs_extra_1.default.outputFileSync(configPath, code);
+    console.info("初始化配置成功");
 }
 exports.default = execInit;
