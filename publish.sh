@@ -1,2 +1,2 @@
 npm run build
-npm publish --access=public
+npm publish --access public

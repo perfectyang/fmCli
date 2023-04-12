@@ -56,16 +56,16 @@ const handleExcelData = ({
       `${locale}.${ext}`
     );
     const localePack = langList[i];
-    log.verbose(`写入到指定文件:`, currentLocalePath);
+    log.verbose(`Written to the specified file:`, currentLocalePath);
     // 指定输出下有相同的文件，会一起合并数据
     let oldPrimaryLang: Record<string, string> = {};
     const primaryLangPath = getAbsolutePath(process.cwd(), currentLocalePath);
     oldPrimaryLang = getLang(primaryLangPath);
     const contentPack = merge(incremental ? oldPrimaryLang : {}, localePack);
     saveLocaleFile(contentPack, currentLocalePath);
-    log.success(`${currentLocalePath}---->success!`);
+    log.success(`${currentLocalePath}----> generate success!`);
   });
-  log.success(`导入完毕!`);
+  log.success(`import complete!`);
 };
 
 function execLoadExcel(options: CommandOptions) {
@@ -111,11 +111,11 @@ export const ajaxExcel = (options: CommandOptions) => {
             ext: "json",
             incremental,
           });
-          log.success(`多语言替换成功`);
+          log.success(`Multiple language replacement success`);
         },
         (err) => {
           console.log(err.response);
-          log.error(`多语言替换失败---------------`);
+          log.error(`Multiple language replacement failure---------------`);
         }
       );
   };

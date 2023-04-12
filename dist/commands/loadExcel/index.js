@@ -42,16 +42,16 @@ const handleExcelData = ({ xlsxData, excelJsonOutPutPath, ext, incremental, }) =
         const localeDirPath = excelJsonOutPutPath || (0, getLocaleDir_1.getLocaleDir)();
         const currentLocalePath = (0, getAbsolutePath_1.getAbsolutePath)(localeDirPath, `${locale}.${ext}`);
         const localePack = langList[i];
-        log_1.default.verbose(`写入到指定文件:`, currentLocalePath);
+        log_1.default.verbose(`Written to the specified file:`, currentLocalePath);
         // 指定输出下有相同的文件，会一起合并数据
         let oldPrimaryLang = {};
         const primaryLangPath = (0, getAbsolutePath_1.getAbsolutePath)(process.cwd(), currentLocalePath);
         oldPrimaryLang = (0, getLang_1.default)(primaryLangPath);
         const contentPack = (0, merge_1.default)(incremental ? oldPrimaryLang : {}, localePack);
         (0, saveLocaleFile_1.saveLocaleFile)(contentPack, currentLocalePath);
-        log_1.default.success(`${currentLocalePath}---->生成成功!`);
+        log_1.default.success(`${currentLocalePath}----> generate success!`);
     });
-    log_1.default.success(`导入完毕!`);
+    log_1.default.success(`import complete!`);
 };
 function execLoadExcel(options) {
     var _a;
@@ -93,10 +93,10 @@ const ajaxExcel = (options) => {
                 ext: "json",
                 incremental,
             });
-            log_1.default.success(`多语言替换成功`);
+            log_1.default.success(`Multiple language replacement success`);
         }, (err) => {
             console.log(err.response);
-            log_1.default.error(`多语言替换失败---------------`);
+            log_1.default.error(`Multiple language replacement failure---------------`);
         });
     };
     getXLS();

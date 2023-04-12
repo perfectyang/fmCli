@@ -1,6 +1,6 @@
 {
   "name": "@fefeime/cli",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "description": "实现中文自动替换i18n标记命令行工具",
   "bin": {
     "fm": "bin/index.js"
