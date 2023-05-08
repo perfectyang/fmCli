@@ -10,6 +10,11 @@ import { saveLocaleFile } from "../../utils/saveLocaleFile";
 import log from "../../utils/log";
 import getLang from "../../utils/getLang";
 import merge from "lodash/merge";
+
+interface ILang {
+  enUs: string;
+  zhCn: string;
+}
 // import { spreadObject } from '../../utils/spreadObject'
 
 function getLangList(locales: string[], rows: string[][]): StringObject[] {
@@ -116,6 +121,42 @@ export const ajaxExcel = (options: CommandOptions) => {
         (err) => {
           console.log(err.response);
           log.error(`Multiple language replacement failure---------------`);
+        }
+      );
+  };
+  getXLS();
+};
+export const ajaxData = (options: CommandOptions) => {
+  const i18nConfig = getI18nConfig(options);
+  const { excelJsonOutPutPath, apiExcelUrl, incremental = false } = i18nConfig;
+  const getXLS = () => {
+    axios
+      .request({
+        url: apiExcelUrl,
+        method: "get",
+      })
+      .then(
+        ({ data }) => {
+          const fields = ["code", "zh-cn", "en-us"];
+          const list = data.data.list;
+          const result = [fields];
+          list.forEach(({ enUs, zhCn }: ILang) => {
+            result.push([zhCn, zhCn, enUs]);
+          });
+          handleExcelData({
+            xlsxData: result,
+            excelJsonOutPutPath,
+            ext: "json",
+            incremental,
+          });
+          log.success(`Multiple language replacement success`);
+        },
+        (err) => {
+          log.error(
+            `Multiple language replacement failure--start-------------`
+          );
+          log.error(err.response);
+          log.error(`Multiple language replacement failure--end-------------`);
         }
       );
   };

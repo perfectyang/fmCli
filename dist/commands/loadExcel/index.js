@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ajaxExcel = void 0;
+exports.ajaxData = exports.ajaxExcel = void 0;
 const axios_1 = __importDefault(require("axios"));
 const node_xlsx_1 = __importDefault(require("node-xlsx"));
 const getAbsolutePath_1 = require("../../utils/getAbsolutePath");
@@ -102,4 +102,36 @@ const ajaxExcel = (options) => {
     getXLS();
 };
 exports.ajaxExcel = ajaxExcel;
+const ajaxData = (options) => {
+    const i18nConfig = (0, initConfig_1.getI18nConfig)(options);
+    const { excelJsonOutPutPath, apiExcelUrl, incremental = false } = i18nConfig;
+    const getXLS = () => {
+        axios_1.default
+            .request({
+            url: apiExcelUrl,
+            method: "get",
+        })
+            .then(({ data }) => {
+            const fields = ["code", "zh-cn", "en-us"];
+            const list = data.data.list;
+            const result = [fields];
+            list.forEach(({ enUs, zhCn }) => {
+                result.push([zhCn, zhCn, enUs]);
+            });
+            handleExcelData({
+                xlsxData: result,
+                excelJsonOutPutPath,
+                ext: "json",
+                incremental,
+            });
+            log_1.default.success(`Multiple language replacement success`);
+        }, (err) => {
+            log_1.default.error(`Multiple language replacement failure--start-------------`);
+            log_1.default.error(err.response);
+            log_1.default.error(`Multiple language replacement failure--end-------------`);
+        });
+    };
+    getXLS();
+};
+exports.ajaxData = ajaxData;
 exports.default = execLoadExcel;

@@ -67,6 +67,17 @@ commander_1.program
     }
     require("./commands/loadExcel").ajaxExcel(options);
 });
+commander_1.program
+    .command("loadApi")
+    .description("导入翻译语言接口")
+    .action(() => {
+    // TODO: 不知道为什么，这里commander没有直接返回指令参数，先用minimist自己处理
+    const options = (0, minimist_1.default)(process.argv.slice(3));
+    if (options.c) {
+        options.configFile = options.c;
+    }
+    require("./commands/loadExcel").ajaxData(options);
+});
 // 注册里面的方法
 registerMethods(["./commands/tool"]);
 commander_1.program.addOption(new commander_1.Option("-d, --debug").hideHelp());
