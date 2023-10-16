@@ -70,19 +70,19 @@ function saveLocale(localePath) {
 }
 function getPrettierParser(ext) {
     switch (ext) {
-        case 'vue':
-            return 'vue';
-        case 'ts':
-        case 'tsx':
-            return 'babel-ts';
+        case "vue":
+            return "vue";
+        case "ts":
+        case "tsx":
+            return "babel-ts";
         default:
-            return 'babel';
+            return "babel";
     }
 }
 function getOutputPath(input, output, sourceFilePath) {
     let outputPath;
     if (output) {
-        const filePath = sourceFilePath.replace(input + '/', '');
+        const filePath = sourceFilePath.replace(input + "/", "");
         outputPath = (0, getAbsolutePath_1.getAbsolutePath)(process.cwd(), output, filePath);
         fs_extra_1.default.ensureFileSync(outputPath);
     }
@@ -112,63 +112,63 @@ function formatInquirerResult(answers) {
 }
 function getTranslationConfig() {
     return __awaiter(this, void 0, void 0, function* () {
-        const cachePath = (0, getAbsolutePath_1.getAbsolutePath)(__dirname, '../.cache/configCache.json');
+        const cachePath = (0, getAbsolutePath_1.getAbsolutePath)(__dirname, "../.cache/configCache.json");
         fs_extra_1.default.ensureFileSync(cachePath);
-        const cache = fs_extra_1.default.readFileSync(cachePath, 'utf8') || '{}';
+        const cache = fs_extra_1.default.readFileSync(cachePath, "utf8") || "{}";
         const oldConfigCache = JSON.parse(cache);
         const answers = yield inquirer_1.default.prompt([
             {
-                type: 'list',
-                name: 'translator',
-                message: '请选择翻译接口',
+                type: "list",
+                name: "translator",
+                message: "请选择翻译接口",
                 default: constants_1.YOUDAO,
                 choices: [
-                    { name: '有道翻译', value: constants_1.YOUDAO },
-                    { name: '谷歌翻译', value: constants_1.GOOGLE },
+                    { name: "有道翻译", value: constants_1.YOUDAO },
+                    { name: "谷歌翻译", value: constants_1.GOOGLE },
                 ],
                 when(answers) {
                     return !answers.skipTranslate;
                 },
             },
             {
-                type: 'input',
-                name: 'proxy',
-                message: '使用谷歌服务需要翻墙，请输入代理地址',
-                default: oldConfigCache.proxy || '',
+                type: "input",
+                name: "proxy",
+                message: "使用谷歌服务需要翻墙，请输入代理地址",
+                default: oldConfigCache.proxy || "",
                 when(answers) {
                     return answers.translator === constants_1.GOOGLE;
                 },
                 validate(input) {
-                    return input.length === 0 ? '代理地址不能为空' : true;
+                    return input.length === 0 ? "代理地址不能为空" : true;
                 },
             },
             {
-                type: 'input',
-                name: 'key',
-                message: '请输入有道翻译appKey',
-                default: oldConfigCache.key || '',
+                type: "input",
+                name: "key",
+                message: "请输入有道翻译appKey",
+                default: oldConfigCache.key || "",
                 when(answers) {
                     return answers.translator === constants_1.YOUDAO;
                 },
                 validate(input) {
-                    return input.length === 0 ? 'appKey不能为空' : true;
+                    return input.length === 0 ? "appKey不能为空" : true;
                 },
             },
             {
-                type: 'input',
-                name: 'secret',
-                message: '请输入有道翻译appSecret',
-                default: oldConfigCache.secret || '',
+                type: "input",
+                name: "secret",
+                message: "请输入有道翻译appSecret",
+                default: oldConfigCache.secret || "",
                 when(answers) {
                     return answers.translator === constants_1.YOUDAO;
                 },
                 validate(input) {
-                    return input.length === 0 ? 'appSecret不能为空' : true;
+                    return input.length === 0 ? "appSecret不能为空" : true;
                 },
             },
         ]);
         const newConfigCache = Object.assign(oldConfigCache, answers);
-        fs_extra_1.default.writeFileSync(cachePath, JSON.stringify(newConfigCache), 'utf8');
+        fs_extra_1.default.writeFileSync(cachePath, JSON.stringify(newConfigCache), "utf8");
         const result = formatInquirerResult(answers);
         return result;
     });
@@ -202,20 +202,23 @@ function default_1(options) {
         // locales,
         skipExtract, adjustKeyMap, } = i18nConfig;
         log_1.default.debug(`命令行配置信息:`, i18nConfig);
+        console.log("input", input);
         let oldPrimaryLang = {};
         const primaryLangPath = (0, getAbsolutePath_1.getAbsolutePath)(process.cwd(), localePath);
         oldPrimaryLang = (0, getLang_1.default)(primaryLangPath);
         if (!skipExtract) {
-            log_1.default.info('正在转换中文，请稍等...');
+            log_1.default.info("正在转换中文，请稍等...");
             const sourceFilePaths = getSourceFilePaths(input, exclude);
             const bar = new cli_progress_1.default.SingleBar({
-                format: `${chalk_1.default.cyan('提取进度:')} [{bar}] {percentage}% {value}/{total}`,
+                format: `${chalk_1.default.cyan("提取进度:")} [{bar}] {percentage}% {value}/{total}`,
             }, cli_progress_1.default.Presets.shades_classic);
             const startTime = new Date().getTime();
             bar.start(sourceFilePaths.length, 0);
             sourceFilePaths.forEach((sourceFilePath) => {
-                const sourceCode = fs_extra_1.default.readFileSync(sourceFilePath, 'utf8');
-                const ext = path_1.default.extname(sourceFilePath).replace('.', '');
+                const sourceCode = fs_extra_1.default.readFileSync(sourceFilePath, "utf8");
+                const ext = path_1.default
+                    .extname(sourceFilePath)
+                    .replace(".", "");
                 collector_1.default.resetCountOfAdditions();
                 collector_1.default.setCurrentCollectorPath(sourceFilePath);
                 const { code } = (0, transform_1.default)(sourceCode, ext, rules, sourceFilePath);
@@ -224,7 +227,7 @@ function default_1(options) {
                 if (collector_1.default.getCountOfAdditions() > 0) {
                     const stylizedCode = formatCode(code, ext, i18nConfig.prettier);
                     const outputPath = getOutputPath(input, output, sourceFilePath);
-                    fs_extra_1.default.writeFileSync(outputPath, stylizedCode, 'utf8');
+                    fs_extra_1.default.writeFileSync(outputPath, stylizedCode, "utf8");
                     log_1.default.verbose(`生成文件:`, outputPath);
                 }
                 // 自定义当前文件的keyMap
@@ -245,7 +248,7 @@ function default_1(options) {
             const endTime = new Date().getTime();
             log_1.default.info(`耗时${((endTime - startTime) / 1000).toFixed(2)}s`);
         }
-        console.log(''); // 空一行
+        console.log(""); // 空一行
         // if (!skipTranslate) {
         //   await translate(localePath, locales, oldPrimaryLang, {
         //     translator: i18nConfig.translator,
@@ -253,7 +256,7 @@ function default_1(options) {
         //     youdao: i18nConfig.youdao,
         //   })
         // }
-        log_1.default.success('转换完毕!');
+        log_1.default.success("转换完毕!");
         if (i18nConfig.exportExcel) {
             log_1.default.info(`正在导出excel翻译文件`);
             (0, exportExcel_1.default)();

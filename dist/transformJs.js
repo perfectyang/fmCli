@@ -13,7 +13,7 @@ const assertType_1 = require("./utils/assertType");
 const escapeQuotes_1 = require("./utils/escapeQuotes");
 const constants_1 = require("./utils/constants");
 const stateManager_1 = __importDefault(require("./utils/stateManager"));
-const t = require('@babel/types');
+const t = require("@babel/types");
 function getObjectExpression(obj) {
     const ObjectPropertyArr = [];
     Object.keys(obj).forEach((k) => {
@@ -40,20 +40,20 @@ function isPropNode(path) {
     let isMeetContainer = false;
     // 属性是否包含在props结构里
     if (objWithProps &&
-        objWithProps.type === 'ObjectProperty' &&
-        objWithProps.key.type === 'Identifier' &&
-        objWithProps.key.name === 'props') {
+        objWithProps.type === "ObjectProperty" &&
+        objWithProps.key.type === "Identifier" &&
+        objWithProps.key.name === "props") {
         isMeetProp = true;
     }
     // 对应key是否是default
     if (path.parent &&
-        path.parent.type === 'ObjectProperty' &&
-        path.parent.key.type === 'Identifier' &&
-        path.parent.key.name === 'default') {
+        path.parent.type === "ObjectProperty" &&
+        path.parent.key.type === "Identifier" &&
+        path.parent.key.name === "default") {
         isMeetKey = true;
     }
     // 遍历到指定层数后是否是导出声明
-    if (rootNode && rootNode.type === 'ExportDefaultDeclaration') {
+    if (rootNode && rootNode.type === "ExportDefaultDeclaration") {
         isMeetContainer = true;
     }
     return isMeetProp && isMeetKey && isMeetContainer;
@@ -71,8 +71,8 @@ function nodeToCode(node) {
 }
 // 允许往react函数组件中加入自定义代码
 function insertSnippets(node, snippets) {
-    if (node.body.type === 'BlockStatement' && snippets) {
-        const returnStatement = node.body.body.find((node) => node.type === 'ReturnStatement');
+    if (node.body.type === "BlockStatement" && snippets) {
+        const returnStatement = node.body.body.find((node) => node.type === "ReturnStatement");
         if (returnStatement) {
             const arg = returnStatement.argument;
             const argType = arg === null || arg === void 0 ? void 0 : arg.type;
@@ -80,14 +80,15 @@ function insertSnippets(node, snippets) {
             // 函数是否是react函数组件
             // 情况1: 返回的三元表达式包含JSXElement
             // 情况2: 直接返回了JSXElement
-            if (argType === 'ConditionalExpression' &&
-                (arg.consequent.type === 'JSXElement' || arg.alternate.type === 'JSXElement')) {
+            if (argType === "ConditionalExpression" &&
+                (arg.consequent.type === "JSXElement" ||
+                    arg.alternate.type === "JSXElement")) {
                 if ((0, includeChinese_1.includeChinese)(code)) {
                     const statements = template_1.default.statements(snippets)();
                     node.body.body.unshift(...statements);
                 }
             }
-            else if (argType === 'JSXElement') {
+            else if (argType === "JSXElement") {
                 const statements = template_1.default.statements(snippets)();
                 node.body.body.unshift(...statements);
             }
@@ -96,17 +97,17 @@ function insertSnippets(node, snippets) {
 }
 function transformJs(code, options) {
     const { rule } = options;
-    const { caller, functionName, customizeKey, importDeclaration, functionSnippets } = rule;
+    const { caller, functionName, customizeKey, importDeclaration, functionSnippets, } = rule;
     let hasImportI18n = false; // 文件是否导入过i18n
     let hasTransformed = false; // 文件里是否存在中文转换，有的话才有必要导入i18n
     function getCallExpression(identifier, quote = "'") {
-        const callerName = caller ? caller + '.' : '';
+        const callerName = caller ? caller + "." : "";
         const expression = `${callerName}${functionName}(${quote}${identifier}${quote})`;
         return expression;
     }
     function getReplaceValue(value, params) {
         // 需要过滤处理引号和换行
-        value = (0, escapeQuotes_1.escapeQuotes)(value).replace(/[\r\n]/g, '');
+        value = (0, escapeQuotes_1.escapeQuotes)(value).replace(/[\r\n]/g, "");
         // 表达式结构 obj.fn('xx',{xx:xx})
         let expression;
         // i18n标记有参数的情况
@@ -173,20 +174,20 @@ function transformJs(code, options) {
                     templateMembers.sort((a, b) => a.start - b.start);
                     const shouldReplace = node.quasis.some((node) => (0, includeChinese_1.includeChinese)(node.value.raw));
                     if (shouldReplace) {
-                        let value = '';
+                        let value = "";
                         let slotIndex = 1;
                         const params = {};
                         templateMembers.forEach(function (node) {
-                            if (node.type === 'Identifier') {
-                                value += `{${node.name}}`;
+                            if (node.type === "Identifier") {
+                                value += `{{${node.name}}}`;
                                 params[node.name] = node.name;
                             }
-                            else if (node.type === 'TemplateElement') {
-                                value += node.value.raw.replace(/[\r\n]/g, ''); // 用raw防止字符串中出现 /n
+                            else if (node.type === "TemplateElement") {
+                                value += node.value.raw.replace(/[\r\n]/g, ""); // 用raw防止字符串中出现 /n
                             }
-                            else if (node.type === 'MemberExpression') {
+                            else if (node.type === "MemberExpression") {
                                 const key = `slot${slotIndex++}`;
-                                value += `{${key}}`;
+                                value += `{{${key}}}`;
                                 params[key] = {
                                     isAstNode: true,
                                     value: node,
@@ -195,7 +196,7 @@ function transformJs(code, options) {
                             else {
                                 // 处理${}内容为表达式的情况。例如`测试${a + b}`，把 a+b 这个语法树作为params的值, 并自定义params的键为slot加数字的形式
                                 const key = `slot${slotIndex++}`;
-                                value += `{${key}}`;
+                                value += `{{${key}}}`;
                                 const expression = (0, generator_1.default)(node).code;
                                 const tempAst = transformAST(expression, options);
                                 const expressionAst = tempAst.program.body[0].expression;
@@ -224,7 +225,9 @@ function transformJs(code, options) {
                     var _a;
                     const node = path.node;
                     const valueType = (_a = node.value) === null || _a === void 0 ? void 0 : _a.type;
-                    if (valueType === 'StringLiteral' && node.value && (0, includeChinese_1.includeChinese)(node.value.value)) {
+                    if (valueType === "StringLiteral" &&
+                        node.value &&
+                        (0, includeChinese_1.includeChinese)(node.value.value)) {
                         const value = node.value.value;
                         const jsxIdentifier = t.jsxIdentifier(node.name.name);
                         const jsxContainer = t.jSXExpressionContainer(getReplaceValue(value));
@@ -247,28 +250,30 @@ function transformJs(code, options) {
                         }
                     });
                     // 跳过console.log的提取
-                    if (callee.type === 'MemberExpression' &&
-                        callee.object.type === 'Identifier' &&
-                        callee.object.name === 'console') {
+                    if (callee.type === "MemberExpression" &&
+                        callee.object.type === "Identifier" &&
+                        callee.object.name === "console") {
                         path.skip();
                         return;
                     }
                     // 无调用对象的情况，例如$t('xx')
-                    if (callee.type === 'Identifier' && callee.name === functionName) {
+                    if (callee.type === "Identifier" && callee.name === functionName) {
                         path.skip();
                         return;
                     }
                     // 有调用对象的情况，例如this.$t('xx')、i18n.$t('xx)
-                    if (callee.type === 'MemberExpression') {
-                        if (callee.property && callee.property.type === 'Identifier') {
+                    if (callee.type === "MemberExpression") {
+                        if (callee.property && callee.property.type === "Identifier") {
                             if (callee.property.name === functionName) {
                                 // 处理形如i18n.$t('xx)的情况
-                                if (callee.object.type === 'Identifier' && callee.object.name === caller) {
+                                if (callee.object.type === "Identifier" &&
+                                    callee.object.name === caller) {
                                     path.skip();
                                     return;
                                 }
                                 // 处理形如this.$t('xx')的情况
-                                if (callee.object.type === 'ThisExpression' && caller === 'this') {
+                                if (callee.object.type === "ThisExpression" &&
+                                    caller === "this") {
                                     path.skip();
                                     return;
                                 }
@@ -278,7 +283,7 @@ function transformJs(code, options) {
                 },
                 ImportDeclaration(path) {
                     const res = importDeclaration.match(/from ["'](.*)["']/);
-                    const packageName = res ? res[1] : '';
+                    const packageName = res ? res[1] : "";
                     if (path.node.source.value === packageName) {
                         hasImportI18n = true;
                     }
@@ -294,7 +299,7 @@ function transformJs(code, options) {
                 ArrowFunctionExpression(path) {
                     const { node } = path;
                     // 函数组件必须在代码最外层
-                    if (path.parentPath.scope.block.type !== 'Program') {
+                    if (path.parentPath.scope.block.type !== "Program") {
                         return;
                     }
                     // 允许往react函数组件中加入自定义代码
@@ -303,7 +308,7 @@ function transformJs(code, options) {
                 FunctionExpression(path) {
                     const { node } = path;
                     // 函数组件必须在代码最外层
-                    if (path.parentPath.scope.block.type !== 'Program') {
+                    if (path.parentPath.scope.block.type !== "Program") {
                         return;
                     }
                     // 允许往react函数组件中加入自定义代码

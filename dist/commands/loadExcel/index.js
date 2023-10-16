@@ -124,10 +124,10 @@ const ajaxData = (options) => {
                 ext: "json",
                 incremental,
             });
-            log_1.default.success(`Multiple language replacement success`);
+            log_1.default.success(`Multiple language replacement success----api-interface`);
         }, (err) => {
             log_1.default.error(`Multiple language replacement failure--start-------------`);
-            log_1.default.error(err.response);
+            log_1.default.error(JSON.stringify(err.response));
             log_1.default.error(`Multiple language replacement failure--end-------------`);
         });
     };

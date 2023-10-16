@@ -149,13 +149,13 @@ export const ajaxData = (options: CommandOptions) => {
             ext: "json",
             incremental,
           });
-          log.success(`Multiple language replacement success`);
+          log.success(`Multiple language replacement success----api-interface`);
         },
         (err) => {
           log.error(
             `Multiple language replacement failure--start-------------`
           );
-          log.error(err.response);
+          log.error(JSON.stringify(err.response));
           log.error(`Multiple language replacement failure--end-------------`);
         }
       );
